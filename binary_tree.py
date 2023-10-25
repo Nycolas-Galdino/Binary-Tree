@@ -66,9 +66,9 @@ class Tree:
         if self.key is not None:
             print(" " * (level * 4) + prefix + str(self.key))
             if self.left:
-                self.left.print_tree(level + 1, "L--- ")
+                self.left.print_tree(level + 1, f"{level} L--- ")
             if self.right:
-                self.right.print_tree(level + 1, "R--- ")
+                self.right.print_tree(level + 1, f"{level} R--- ")
                     
                     
     def height(self):
