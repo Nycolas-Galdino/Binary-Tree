@@ -1,254 +1,194 @@
-import contextlib
 import os
-from platform import platform
+import platform
 from random import randint
 
-# The code block is attempting to import the `init` function from the `colorama` module. If the import
-# is successful, the `init` function is called. If the import fails, an exception is raised and
-# caught. In the exception block, the code uses the `os.system` function to execute the command `pip
-# install colorama` to install the `colorama` module. After the installation, the `init` function is
-# imported again and called. This ensures that the `colorama` module is installed and initialized
-# before proceeding with the rest of the code.
+# Try importing colorama, if not available, install it
 try:
-    from colorama import init
-    init()
-except Exception:
-    with contextlib.suppress(Exception):
-        os.system('pip install colorama')
-        os.system('cls' if 'Windows' in platform() else 'clear')
-        from colorama import init
-        init()
-
-# The `Tree` class represents a binary tree and provides methods for inserting values into the tree
-# and performing different types of tree traversals.
-class Tree:
-    def __init__(self, key = None, left = None, right = None):
-        """
-        The function is a constructor for a binary tree node, with optional parameters for the key, left
-        child, and right child.
-        
-        :param key: The key parameter represents the value of the node. It can be any data type, such as an
-        integer, string, or object
-        :param left: The `left` parameter is used to store the reference to the left child of a node in a
-        binary tree
-        :param right: The `right` parameter is used to store the reference to the right child node of a
-        binary tree node
-        """
-        self.key = key
-        self.left = left
-        self.right = right
-
-
-    def insert_node(self, tree, value):
-        """
-        The function inserts a value into a binary tree.
-        
-        :param tree: The parameter "tree" represents the current node in the binary search tree where the
-        value is being inserted
-        :param value: The "value" parameter represents the value that you want to insert into the tree. It
-        is assumed to have a "key" attribute that is used to determine the position of the value in the tree
-        """
-        if value.key == tree.key: print("Valor já inserido na árvore")
-
-        elif value.key < tree.key:
-            if tree.left:
-                tree.insert_node(tree.left, value)
-            else:
-                tree.left = value
-
-        elif tree.right:
-            tree.insert_node(tree.right, value)
-
-        else:
-            tree.right = value
-            
-    def print_tree(self, level=0, prefix="Root: "):
-        if self.key is not None:
-            print(" " * (level * 4) + prefix + str(self.key))
-            if self.left:
-                self.left.print_tree(level + 1, f"{level} L--- ")
-            if self.right:
-                self.right.print_tree(level + 1, f"{level} R--- ")
-                    
-                    
-    def height(self):
-        if self.key is None:
-            return 0
-        left_height = self.left.height() if self.left else 0
-        right_height = self.right.height() if self.right else 0
-        return max(left_height, right_height) + 1
-
-    def print_tree_2(self):
-        tree_height = self.height()
-        if tree_height == 0:
-            return
-
-        nodes = [self]
-        level = 1
-
-        while nodes and level <= tree_height:
-            nodes_count = len(nodes)
-            space = 2 ** (tree_height - level + 1) - 1
-            print(' ' * (space // 2), end='')
-
-            new_nodes = []
-            for node in nodes:
-                if node is not None:
-                    print(node.key, end='')
-                    new_nodes.extend(
-                        (
-                            node.left or None,
-                            node.right or None,
-                        )
-                    )
-                else:
-                    print(' ', end='')
-
-                print(' ' * space, end='')
-            print()
-            nodes = new_nodes
-            level += 1
-
-    
-    def pre_order(self, tree):
-        """
-        The pre_order function prints the key of each node in a binary tree in pre-order traversal.
-        
-        :param tree: The parameter `tree` represents the root node of a binary tree
-        :return: The function is not explicitly returning anything. If the condition `if not self.key` is
-        true, then the function will return `None` by default. Otherwise, the function will print the key of
-        the tree and recursively call `pre_order` on the left and right subtrees.
-        """
-        if not self.key: return
-
-        print(tree.key)
-        if tree.left: self.in_order(tree.left)
-        if tree.right: self.in_order(tree.right)
-
-
-    def in_order(self, tree):
-        """
-        The function recursively prints the keys of a binary tree in ascending order.
-        
-        :param tree: The parameter "tree" represents a node in a binary tree
-        :return: The function does not explicitly return anything. If the tree is empty (self.key is None),
-        the function will return None. Otherwise, it will recursively traverse the tree and print the keys
-        in order.
-        """
-        if not self.key: return
-
-        if tree.left: self.in_order(tree.left)
-        print(tree.key)
-        if tree.right: self.in_order(tree.right)
-
-
-    def post_order(self, tree):
-        """
-        The function performs a post-order traversal of a binary tree and prints the keys of the nodes.
-        
-        :param tree: The parameter `tree` represents a node in a binary tree
-        :return: The function does not explicitly return anything. If the condition `if not self.key` is
-        true, then the function will return `None` by default.
-        """
-        if not self.key: return
-
-        if tree.left: self.in_order(tree.left)
-        if tree.right: self.in_order(tree.right)
-        print(tree.key)
-
-
-    def search_node(self, tree, value):
-        if value == tree.key: print("\033[1;32mValor encontrado na árvore binária\033[0m")
-
-        elif value < tree.key:
-            if tree.left: tree.search_node(tree.left, value)
-            else: print("\033[1;31mValor não encontrado na árvore binária\033[0m")
-
-        elif value > tree.key:
-            if tree.right: tree.search_node(tree.right, value)
-            else: print("\033[1;31mValor não encontrado na árvore binária\033[0m")
-
-
-    def remove_node(self, tree, value):
-        pass
-
-while True:
+    import colorama
+except ImportError:
     try:
-        value = float(input("\033[1;36mVamos iniciar a árvore! \n \n Qual será o número raiz?\033[0m \n-> "))
-        tree = Tree(value)
-        break
-    except Exception:
-        print('Valor não suportado, digite apenas números.')
-
-while True:
-    print("""\n
-\033[1;4;36mEscolha uma alternativa:\033[0m
-    1 - Inserir valor
-    2 - Ver lista pre-order
-    3 - Ver lista in_order
-    4 - Ver lista pos-order
-    
-    5 - Visualizar árvore binária
-    
-    7 - Procurar valor na Lista
-    
-    8 - Limpar terminal
-    9 - Resetar árvore
-    
-    10 - Inserir números aleatórios
-    
-    0 - sair""")
-
-    choise = input('-> ')
-
-
-    try:
-        if choise == "0":
-            quit()
-
-        elif choise == "1":
-            value = float(input("Qual valor você quer escolher? \n-> ").replace(',', '.'))
-            tree_value = Tree(value)
-            tree.insert_node(tree, tree_value)
-
-        elif choise == "2":
-            tree.pre_order(tree)
-
-        elif choise == "3":
-            tree.in_order(tree)
-
-        elif choise == "4":
-            tree.post_order(tree)
-
-        elif choise == '5':
-            tree.print_tree()
-
-        elif choise == "7":
-            value = float(input("Qual valor você deseja procurar?"))
-            tree.search_node(tree, value)
-
-        elif choise == "8":
-            os.system('cls' if 'Windows' in platform() else 'clear')
-            print("\033[1;32mTerminal limpo!\033[0m")
-
-        elif choise == "9":
-            while True:
-                value = float(input("Ok! Qual será o número raiz? -> ").replace(',', '.'))
-                tree = Tree(value)
-                break
-            
-        elif choise == "10":
-            temp_list = []
-            qtd = int(input("Quantas números aleatórios você quer inserir no banco?"))
-            for _ in range(qtd):
-                tree_value = Tree(randint(0,1000))
-                tree.insert_node(tree, tree_value)
-
-        else:
-            print('\033[1;31mvalor não reconhecido, digite apenas os números')
-    
+        import subprocess
+        subprocess.check_call(['pip', 'install', 'colorama'])
+        import colorama
     except Exception as e:
-        print(e)
-        print('\033[1;31mValor não suportado, digite apenas números.\033[0m')
+        print("Failed to install colorama:", e)
+finally:
+    colorama.init()
 
+class TreeNode:
+    def __init__(self, key=None):
+        self.key = key
+        self.left = None
+        self.right = None
 
+class BinaryTree:
+    def __init__(self, root_key=None):
+        self.root = TreeNode(root_key)
+
+    def insert(self, key):
+        if not isinstance(key, (int, float)):
+            raise ValueError("Key must be a number")
+        
+        new_node = TreeNode(key)
+        if self.root.key is None:
+            self.root = new_node
+            return
+        
+        current = self.root
+        while True:
+            if key == current.key:
+                print("Value already exists in the tree")
+                return
+            elif key < current.key:
+                if current.left is None:
+                    current.left = new_node
+                    return
+                current = current.left
+            else:
+                if current.right is None:
+                    current.right = new_node
+                    return
+                current = current.right
+
+    def pre_order(self, node):
+        if node is not None:
+            print(node.key, end=' ')
+            self.pre_order(node.left)
+            self.pre_order(node.right)
+
+    def in_order(self, node):
+        if node is not None:
+            self.in_order(node.left)
+            print(node.key, end=' ')
+            self.in_order(node.right)
+
+    def post_order(self, node):
+        if node is not None:
+            self.post_order(node.left)
+            self.post_order(node.right)
+            print(node.key, end=' ')
+
+    def search(self, key):
+        if not isinstance(key, (int, float)):
+            raise ValueError("Key must be a number")
+
+        current = self.root
+        while current is not None:
+            if key == current.key:
+                print("\033[1;32mValue found in the binary tree\033[0m")
+                return
+            elif key < current.key:
+                current = current.left
+            else:
+                current = current.right
+        print("\033[1;31mValue not found in the binary tree\033[0m")
+
+    def print_tree(self):
+        levels = self._get_tree_levels()
+        for level in levels:
+            print(level)
+
+    def _get_tree_levels(self):
+        levels = []
+        queue = [(self.root, 0)]
+        while queue:
+            node, depth = queue.pop(0)
+            if len(levels) == depth:
+                levels.append([])
+            if node:
+                levels[depth].append(node.key)
+                queue.append((node.left, depth + 1))
+                queue.append((node.right, depth + 1))
+            else:
+                levels[depth].append(None)
+        return levels
+
+    def reset_tree(self, root_key=None):
+        self.root = TreeNode(root_key)
+
+# Clear the terminal screen
+def clear_screen():
+    os.system('cls' if platform.system() == 'Windows' else 'clear')
+
+def input_float(prompt):
+    while True:
+        try:
+            value = float(input(prompt).replace(',', '.'))
+            return value
+        except ValueError:
+            print('Unsupported value, please input only numbers.')
+
+def main():
+    tree = None
+    while True:
+        print("\033[1;36mLet's start the tree!\033[0m")
+        root_value = input_float("What will be the root number? -> ")
+        tree = BinaryTree(root_value)
+        break
+
+    while True:
+        print("""\n\033[1;4;36mChoose an option:\033[0m
+        1 - Insert value
+        2 - View pre-order list
+        3 - View in-order list
+        4 - View post-order list
+        5 - Visualize binary tree
+        6 - Search value in the List
+        7 - Reset tree
+        8 - Insert random numbers
+        0 - Exit""")
+
+        choice = input('-> ')
+
+        try:
+            if choice == "0":
+                quit()
+
+            elif choice == "1":
+                value = input_float("Which value do you want to insert? -> ")
+                tree.insert(value)
+
+            elif choice == "2":
+                print("Pre-order list:", end=' ')
+                tree.pre_order(tree.root)
+                print()
+
+            elif choice == "3":
+                print("In-order list:", end=' ')
+                tree.in_order(tree.root)
+                print()
+
+            elif choice == "4":
+                print("Post-order list:", end=' ')
+                tree.post_order(tree.root)
+                print()
+
+            elif choice == '5':
+                print("Visualizing binary tree:")
+                tree.print_tree()
+
+            elif choice == "6":
+                value = input_float("Which value do you want to search for? -> ")
+                tree.search(value)
+
+            elif choice == "7":
+                root_value = input_float("Ok! What will be the new root number? -> ")
+                tree.reset_tree(root_value)
+
+            elif choice == "8":
+                num_random = int(input("How many random numbers do you want to insert into the tree? -> "))
+                for _ in range(num_random):
+                    tree.insert(randint(0, 1000))
+
+            else:
+                print('\033[1;31mValue not recognized, please input only numbers')
+
+        except ValueError as e:
+            print(e)
+            print('\033[1;31mUnsupported value, please input only numbers.\033[0m')
+
+        input("\nPress Enter to continue...")
+        clear_screen()
+
+if __name__ == "__main__":
+    main()
